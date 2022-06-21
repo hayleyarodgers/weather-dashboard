@@ -1,9 +1,8 @@
 /* JS DIRECTORY
     1. =VARIABLES
-    2. =FETCH
-    3. =INPUT
-    4. =DISPLAY
-    5. =STORAGE
+    2. =INPUT
+    3. =DISPLAY
+    4. =STORAGE
 */
 
 /* ===VARIABLES=== */
@@ -15,51 +14,128 @@ var searchHistoryEl = $('#search-history');
 
 var selectedCityNameEl = $('#selected-city-name');
 var selectedCity;
+var selectedCityLatitude;
+var selectedCityLongitude;
+
+var time = moment();
+var currentTimeSelectedCity;
+
+var icon;
+var temperature;
+var wind;
+var humidity;
+var uv;
+
+var dateTodayEl = $('#date-today');
+var temperatureTodayEl = $('#temperature-today');
+var windTodayEl = $('#wind-today');
+var humidityTodayEl = $('#humidity-today');
+var uvTodayEl = $('#UV-today');
+
 
 var dateEls = $('.date');
 var iconEls = $('.icon');
-var temperatureEls = $('.temperature');
-var windEls = $('.wind');
-var humidityEls = $('.humidity');
-var uvEl = $('#UV');
 
-/* ===FETCH=== */
+var temperatureForecastEls = $('.temperature');
+var windForecastEls = $('.wind');
+var humidityForecastEls = $('.humidity');
 
-// Get weather data
-
+var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
 /* ===INPUT=== */
 
 // When user starts typing input field, show dropdown list of available cities based on API
-$(function () {
+// $(function () {
     // get city names from API
-    var cityNames = [];
+    // var cityNames = [];
 
-    cityInputEl.autocomplete({
-      source: cityNames,
-    });
-  });
+    // cityInputEl.autocomplete({
+    //  source: cityNames,
+    // });
+  // });
 
 // When search button is clicked, set user's input as selected city
-searchButtonEl.on('submit', selectCity);
+searchButtonEl.on('click', selectCity);
 
-function selectCity() {
-    selectedCity = selectedCityNameEl.val();
+function selectCity(event) {
+    event.preventDefault();
 
-    if (!(selectedCity in cityNames)) {
+    selectedCity = cityInputEl.val().trim();
+
+    // change to pop-up
+    if (!selectedCity) {
+        alert('You need to select a city!');
         return;
     }
 
-    selectedCityNameEl.val('');
+    cityInputEl.val('');
 
-    showWeather();
+    getLatLon();
 }
 
+// Get latitude and longitude of selected city
+function getLatLon() {
+    var apiURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + selectedCity + '&limit=1&appid=' + apiKey;
+
+    fetch(apiURL).then(function (response) {
+        if (response.ok) {
+            response.json()
+            .then(function (data) {
+                selectedCityLatitude = data[0].lat;
+                selectedCityLongitude = data[0].lon;
+                getTodaysWeather();
+                getWeatherForecast();
+            });
+        
+        // change to error page
+        } else {
+            alert('Error: ' + response.statusText);
+        }
+    });
+};
 
 /* ===DISPLAY=== */
 
-// Show weather data for selected city
-function showWeather() {
+// Show dates using moment.js
+
+
+// Show today's weather for selected city
+function getTodaysWeather() {
+    var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=minutely,hourly,daily,alerts&appid=' + apiKey +'&units=metric';
+
+    fetch(apiURL).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                console.log(data);
+                var timeOffsetMinutes = (data.timezone_offset)/3600;
+                currentTimeSelectedCity = time.utcOffset(timeOffsetMinutes).format('h:mA, D/M/YY');
+                temperature = data.current.temp;
+                wind = data.current.wind_speed;
+                humidity = data.current.humidity;
+                uv = data.current.uvi;
+                showTodaysWeather();
+            });
+        } else {
+            alert('Error: ' + response.statusText);
+        }
+    });
+};
+
+function showTodaysWeather() {
+    selectedCityNameEl.text(selectedCity);
+    dateTodayEl.text(currentTimeSelectedCity);
+    temperatureTodayEl.text(temperature);
+    windTodayEl.text(wind);
+    humidityTodayEl.text(humidity);
+    uvTodayEl.text(uv);
+}
+
+function getWeatherForecast() {
+
+}
+
+// Show weather forecast for selected city
+function showWeatherForecast () {
 
 }
 
