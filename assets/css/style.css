@@ -1,0 +1,65 @@
+/* CSS DIRECTORY
+    1. =GLOBAL
+    2. =HEADER
+    3. =SEARCH-BAR
+    4. =SEARCH-HISTORY
+    5. =WEATHER-TODAY
+    6. =WEATHER-FORECAST
+    7. =FOOTER
+*/
+
+/* ===GLOBAL=== */
+
+/* Set font and color scheme */
+
+:root {
+    font-size: 62.5%;
+    --font-heading: 'Oswald', sans-serif;
+    --font-main: 'Quattrocento', serif;
+    --black: #211F30;
+    --dark-grey: #32384D;
+    --blue: #217CA3;
+    --yellow: #F9BA32;
+}
+
+body {
+    color: var(--black);
+    font-family: var(--font-main);
+    font-weight: 400;
+    font-size: 1.65rem;
+}
+
+.form-control {
+    font-size: 2rem;
+}
+
+.btn {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 2rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+}
+
+h1 {
+   font-size: 8rem;
+   text-align: center; 
+}
+
+h2 {
+   font-size: 5rem; 
+}
+
+h3 {
+   font-size: 3rem; 
+}
+
+h4 {
+   font-size: 1rem; 
+}

@@ -11,7 +11,8 @@
     <!--Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
     <!--Fonts-->
-    <link rel="stylesheet" href=""/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&family=Quattrocento:wght@400;700&display=swap"/>
+
     <!--Custom styling-->
     <link rel="stylesheet" href="./assets/css/reset.css"/>
     <link rel="stylesheet" href="./assets/css/style.css"/>
@@ -20,71 +21,107 @@
 
   <body>
     <!--Header-->
-    <header>
+    <header class="jumbotron">
       <h1>Weather Dashboard</h1>
     </header>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <!--Search-->
-        <div id="search" class="col-2">
+        <div id="search" class="col-3">
             <!--Search bar-->
-            <div id="search-bar">
-                <h2>Search for a city:</h2>
-                <input type="text" id="city-input" placeholder="Sydney">
-                <button id="search-button">Search</button>
+            <div id="search-bar" class="row">
+                <h3 class="m-2">Search for a city:</h3>
+                <input class="form-control m-2" type="text" id="city-input" placeholder="Sydney">
+                <button id="search-button" type="button" class="btn btn-primary btn-lg btn-block m-2">SEARCH</button>
             </div>
+            <hr>
             <!--Search history-->
             <div id="search-history">
                 <ul></ul>
             </div>
         </div>
         <!--Weather display-->
-        <div id="weather" class="col-10">
+        <div id="weather" class="col-9">
+            <div class="row mb-3 border-bottom">
+                <h2 id="city-name-display">Sydney</h2>
+            </div>
             <!--Today's weather-->
-            <div id="weather-today">
-                <h2><span id="city-name-display"></span> <span id="today-date"></span> <i id="city-weather-icon"></i></h2>
-                <p>Temperature: <span id="temperature-today"></span>°F</p>
-                <p>Wind: <span id="wind-today"></span>MPH</p>
-                <p>Humidity: <span id="humidity-today"></span>%</p>
-                <p>UV index: <span id="UV-today"></span></p>
+            <h3 class="row">Today's weather forecast</h3>
+            <div id="weather-today" class="card mb-3 px-0 row">
+                <div class="card-header">
+                    <h4 id="today-date"></h4><i id="city-weather-icon"></i>
+                </div>
+                <div class="card-body text-dark">
+                    <div class="card-text">
+                        <p>Temperature: <span id="temperature-today"></span>°F</p>
+                        <p>Wind: <span id="wind-today"></span>MPH</p>
+                        <p>Humidity: <span id="humidity-today"></span>%</p>
+                        <p>UV index: <button id="UV-today" type="button"></button></p>
+                    </div>
+                </div>
             </div>
             <!--Weather forecast-->
-            <h3>5-day Forecast</h3>
-            <div id="weather-forecast" class="row">
-                <div id="day-1" class="predicted-forecast col">
-                    <h4></h4>
-                    <i></i>
-                    <p>Temperature: <span id="temperature-1"></span>°F</p>
-                    <p>Wind: <span id="wind-1"></span>MPH</p>
-                    <p>Humidity: <span id="humidity-1"></span>%</p>
+            <h3 class="row">5-day forecast</h3>
+            <div id="weather-forecast" class="row d-flex justify-content-between">
+                <div id="day-1" class="card ml-2 mb-3 px-0 col predicted-forecast">
+                    <div class="card-header">
+                        <h4></h4><i class="weather-icon"></i>
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="card-text">
+                            <p>Temperature: <span id="temperature-1"></span>°F</p>
+                            <p>Wind: <span id="wind-1"></span>MPH</p>
+                            <p>Humidity: <span id="humidity-1"></span>%</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="day-2" class="predicted-forecast col">
-                    <h4></h4>
-                    <i></i>
-                    <p>Temperature: <span id="temperature-2"></span>°F</p>
-                    <p>Wind: <span id="wind-2"></span>MPH</p>
-                    <p>Humidity: <span id="humidity-2"></span>%</p>
+                <div id="day-2" class="card mx-2 mb-3 px-0 col predicted-forecast">
+                    <div class="card-header">
+                        <h4></h4><i class="weather-icon"></i>
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="card-text">
+                            <p>Temperature: <span id="temperature-2"></span>°F</p>
+                            <p>Wind: <span id="wind-2"></span>MPH</p>
+                            <p>Humidity: <span id="humidity-2"></span>%</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="day-3" class="predicted-forecast col">
-                    <h4></h4>
-                    <i></i>
-                    <p>Temperature: <span id="temperature-3"></span>°F</p>
-                    <p>Wind: <span id="wind-3"></span>MPH</p>
-                    <p>Humidity: <span id="humidity-3"></span>%</p>
+                <div id="day-3" class="card mx-2 mb-3 px-0 col predicted-forecast">
+                    <div class="card-header">
+                        <h4></h4><i class="weather-icon"></i>
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="card-text">
+                            <p>Temperature: <span id="temperature-3"></span>°F</p>
+                            <p>Wind: <span id="wind-3"></span>MPH</p>
+                            <p>Humidity: <span id="humidity-3"></span>%</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="day-4" class="predicted-forecast col">
-                    <h4></h4>
-                    <i></i>
-                    <p>Temperature: <span id="temperature-4"></span>°F</p>
-                    <p>Wind: <span id="wind-4"></span>MPH</p>
-                    <p>Humidity: <span id="humidity-4"></span>%</p>
+                <div id="day-4" class="card mx-2 mb-3 px-0 col predicted-forecast">
+                    <div class="card-header">
+                        <h4></h4><i class="weather-icon"></i>
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="card-text">
+                            <p>Temperature: <span id="temperature-4"></span>°F</p>
+                            <p>Wind: <span id="wind-4"></span>MPH</p>
+                            <p>Humidity: <span id="humidity-4"></span>%</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="day-5" class="predicted-forecast col">
-                    <h4></h4>
-                    <i></i>
-                    <p>Temperature: <span id="temperature-5"></span>°F</p>
-                    <p>Wind: <span id="wind-5"></span>MPH</p>
-                    <p>Humidity: <span id="humidity-5"></span>%</p>
+                <div id="day-5" class="card mr-2 mb-3 px-0 col predicted-forecast">
+                    <div class="card-header">
+                        <h4></h4><i class="weather-icon"></i>
+                    </div>
+                    <div class="card-body text-dark">
+                        <div class="card-text">
+                            <p>Temperature: <span id="temperature-5"></span>°F</p>
+                            <p>Wind: <span id="wind-5"></span>MPH</p>
+                            <p>Humidity: <span id="humidity-5"></span>%</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
