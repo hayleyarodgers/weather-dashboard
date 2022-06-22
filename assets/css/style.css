@@ -38,6 +38,10 @@ h4 {
    font-size: 2rem; 
 }
 
+footer {
+    line-height: 1;
+}
+
 .card-header {
     background-color: rgba(0, 0, 255, 0.141);
 }
