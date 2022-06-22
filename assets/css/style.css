@@ -54,6 +54,15 @@ h4 {
    font-size: 2rem; 
 }
 
+.jumbotron {
+    background-color: #007bff;
+    color: white;
+}
+
+.card-header {
+    font-family: var(--font-heading);
+}
+
 .greenUV {
     background-color: rgb(49, 209, 49);
 }
@@ -89,5 +98,6 @@ h4 {
 }
 
 #clear-button, #search-history li {
+    font-family: var(--font-heading);
     font-size: 1.65rem;
 }
