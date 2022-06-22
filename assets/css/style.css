@@ -33,7 +33,7 @@ body {
     font-size: 2rem;
 }
 
-.btn {
+#search-button {
     font-family: var(--font-heading);
     font-weight: 400;
     font-size: 2rem;
@@ -61,4 +61,24 @@ h3 {
 
 h4 {
    font-size: 2rem; 
+}
+
+.greenUV {
+    background-color: rgb(49, 209, 49);
+}
+
+.yellowUV {
+    background-color: rgb(255, 251, 0);
+}
+
+.orangeUV {
+    background-color: rgb(255, 132, 0);
+}
+
+.redUV {
+    background-color: rgb(244, 30, 30);
+}
+
+.purpleUV {
+    background: rgb(231, 9, 231);
 }

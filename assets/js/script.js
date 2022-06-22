@@ -36,32 +36,19 @@ var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
 /* ===INPUT=== */
 
-// When user starts typing input field, show dropdown list of available cities based on API
-// $(function () {
-    // get city names from API
-    // var cityNames = [];
-
-    // cityInputEl.autocomplete({
-    //  source: cityNames,
-    // });
-  // });
-
 // When search button is clicked, set user's input as selected city
 searchButtonEl.addEventListener('click', selectCity);
 
 function selectCity(event) {
     event.preventDefault();
-
-    selectedCity = cityInputEl.value.trim();
+    selectedCity = cityInputEl.value;
 
     if (!selectedCity) {
         alert('You need to select a city!');
         return;
     }
 
-    cityInputEl.value = '';
-
-    getLatLon();
+    getLatLon(selectedCity);
 }
 
 // Get latitude and longitude of selected city
@@ -111,6 +98,25 @@ function showTodaysWeather(data) {
     windTodayEl.textContent = data.current.wind_speed;
     humidityTodayEl.textContent = data.current.humidity;
     uvTodayEl.textContent = data.current.uvi;
+    cityInputEl.value = '';
+
+    var uvToday = data.current.uvi;
+    setUVColour(uvToday);
+}
+
+// Set display of UV element based on value of UV index 
+function setUVColour(uvToday) {
+    if (uvToday <= 2) {
+        uvTodayEl.classList.add('greenUV');
+    } else if (2 < uvToday <= 5) {
+        uvTodayEl.classList.add('yellowUV');
+    } else if (6 < uvToday <= 7) {
+        uvTodayEl.classList.add('orangeUV');
+    } else if (8 < uvToday <= 10) {
+        uvTodayEl.classList.add('redUV');
+    } else if (uvToday >= 5) {
+        uvTodayEl.classList.add('purpleUV');
+    }
 }
 
 // Get data for weather forecast in selected city
@@ -139,11 +145,6 @@ function showWeatherForecast(data) {
         windForecastEls[i].textContent = data.daily[i].humidity;
         humidityForecastEls[i].textContent = data.daily[i].wind_speed;
     }   
-}
-
-// Set display of UV element based on value of UV index 
-function uvColour() {
-    
 }
 
 /* ===STORAGE=== */
