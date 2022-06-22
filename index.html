@@ -28,7 +28,7 @@
             <!--Search bar-->
             <form id="search-bar" class="form-group row">
                 <h3 class="m-2">Search for a city:</h3>
-                <input class="form-control m-2" type="text" id="city-input" placeholder="Sydney">
+                <input class="form-control m-2" type="text" id="city-input">
                 <button id="search-button" type="button" class="btn btn-primary btn-lg btn-block m-2">SEARCH</button>
             </form>
             <hr>
@@ -38,7 +38,7 @@
         <!--Weather display-->
         <div id="weather" class="col-9">
             <div class="row mb-3 border-bottom">
-                <h2 id="selected-city-name"></h2>
+                <h2><span id="selected-city-name"></span>, <span id="selected-city-country"></span></h2>
             </div>
             <!--Today's weather-->
             <h3 class="row">Today's weather forecast</h3>

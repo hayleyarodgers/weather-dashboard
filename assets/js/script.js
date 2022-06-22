@@ -13,7 +13,9 @@ var searchButtonEl = document.getElementById('search-button');
 var searchHistoryEl = document.getElementById('search-history');
 
 var selectedCityNameEl = document.getElementById('selected-city-name');
+var selectedCityCountryEl = document.getElementById('selected-city-country');
 var selectedCity;
+var selectedCityCountry;
 var selectedCityLatitude;
 var selectedCityLongitude;
 
@@ -64,7 +66,7 @@ function getLatLon(selectedCity) {
             .then(function (data) {
                 selectedCityLatitude = data[0].lat;
                 selectedCityLongitude = data[0].lon;
-                selectedCityState
+                selectedCityCountry = data[0].country;
                 getTodaysWeatherData();
             });
         } else {
@@ -97,6 +99,7 @@ function showTodaysWeather(data) {
     var currentTimeSelectedCity = moment().utcOffset(offsetHoursSelectedCity).format('h:mmA, D/M/YY');
 
     selectedCityNameEl.textContent = selectedCity;
+    selectedCityCountryEl.textContent = selectedCityCountry;
     dateTodayEl.textContent = currentTimeSelectedCity;
     temperatureTodayEl.textContent = data.current.temp;
     windTodayEl.textContent = data.current.wind_speed;
@@ -188,5 +191,6 @@ function showCityHistory(savedCities) {
 // Autopopulate with data for Sydney when the page loads
 window.onload = function() {
     selectedCity = 'Sydney'
+    selectedCityState = 'New South Wales'
     getLatLon('Sydney');
 }
