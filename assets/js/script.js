@@ -173,9 +173,11 @@ function saveCity(selectedCity) {
 }
 
 // Display city in search history 
-function showCityHistory(savedCities) {
+function showCityHistory() {
     searchHistoryEl.innerHTML = '';
     
+    savedCities = JSON.parse(localStorage.getItem("savedCities"));
+
     for (var i = 0; i < savedCities.length; i++) {
         var city = savedCities[i];
         var li = document.createElement("li");
@@ -186,16 +188,16 @@ function showCityHistory(savedCities) {
 }
 
 // When clicked, set clicked city as selected city and show weather data
-function showWeatherForSavedCity(event) {
+searchHistoryEl.addEventListener('click', function(event) {
     selectedCity = event.target.innerHTML;
     getLatLon(selectedCity);
-}
-
-searchHistoryEl.addEventListener('click', showWeatherForSavedCity);
+});
 
 // Autopopulate with data for Sydney when the page loads
 window.onload = function() {
     selectedCity = 'Sydney'
     selectedCityState = 'New South Wales'
     getLatLon('Sydney');
+
+    showCityHistory(savedCities);
 }
