@@ -8,17 +8,17 @@
 /* ===VARIABLES=== */
 
 // Section element variables
-var cityInputEl = $('#city-input');
-var searchButtonEl = $('#search-button');
-var searchHistoryEl = $('#search-history');
+var cityInputEl = document.getElementById('city-input');
+var searchButtonEl = document.getElementById('search-button');
+var searchHistoryEl = document.getElementById('search-history');
 
-var selectedCityNameEl = $('#selected-city-name');
+var selectedCityNameEl = document.getElementById('selected-city-name');
 var selectedCity;
 var selectedCityLatitude;
 var selectedCityLongitude;
 
-var time = moment();
 var currentTimeSelectedCity;
+var timeOffsetHours;
 
 var icon;
 var temperature;
@@ -26,19 +26,26 @@ var wind;
 var humidity;
 var uv;
 
-var dateTodayEl = $('#date-today');
-var temperatureTodayEl = $('#temperature-today');
-var windTodayEl = $('#wind-today');
-var humidityTodayEl = $('#humidity-today');
-var uvTodayEl = $('#UV-today');
+var dateTodayEl = document.getElementById('date-today');
+var temperatureTodayEl = document.getElementById('temperature-today');
+var windTodayEl = document.getElementById('wind-today');
+var humidityTodayEl = document.getElementById('humidity-today');
+var uvTodayEl = document.getElementById('UV-today');
 
+var iconEls = document.querySelectorAll('.icon');
 
-var dateEls = $('.date');
-var iconEls = $('.icon');
+var date1El = document.getElementById('today+1');
+var date2El = document.getElementById('today+2');
+var date3El = document.getElementById('today+3');
+var date4El = document.getElementById('today+4');
+var date5El = document.getElementById('today+5');
+var dateEls = [date1El, date2El, date3El, date4El, date5El];
 
-var temperatureForecastEls = $('.temperature');
-var windForecastEls = $('.wind');
-var humidityForecastEls = $('.humidity');
+var forecastDate;
+
+var temperatureForecastEls = document.querySelectorAll('.temperature');
+var windForecastEls = document.querySelectorAll('.wind');
+var humidityForecastEls = document.querySelectorAll('.humidity');
 
 var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
@@ -55,12 +62,12 @@ var apiKey = "88752a63ac29da05bb412d9600126dcf";
   // });
 
 // When search button is clicked, set user's input as selected city
-searchButtonEl.on('click', selectCity);
+searchButtonEl.addEventListener('click', selectCity);
 
 function selectCity(event) {
     event.preventDefault();
 
-    selectedCity = cityInputEl.val().trim();
+    selectedCity = cityInputEl.value;
 
     // change to pop-up
     if (!selectedCity) {
@@ -68,7 +75,7 @@ function selectCity(event) {
         return;
     }
 
-    cityInputEl.val('');
+    cityInputEl.value = '';
 
     getLatLon();
 }
@@ -84,7 +91,6 @@ function getLatLon() {
                 selectedCityLatitude = data[0].lat;
                 selectedCityLongitude = data[0].lon;
                 getTodaysWeather();
-                getWeatherForecast();
             });
         
         // change to error page
@@ -96,9 +102,6 @@ function getLatLon() {
 
 /* ===DISPLAY=== */
 
-// Show dates using moment.js
-
-
 // Show today's weather for selected city
 function getTodaysWeather() {
     var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=minutely,hourly,daily,alerts&appid=' + apiKey +'&units=metric';
@@ -106,14 +109,14 @@ function getTodaysWeather() {
     fetch(apiURL).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                console.log(data);
-                var timeOffsetMinutes = (data.timezone_offset)/3600;
-                currentTimeSelectedCity = time.utcOffset(timeOffsetMinutes).format('h:mA, D/M/YY');
+                timeOffsetHours = (data.timezone_offset)/3600;
+                currentTimeSelectedCity = moment().utcOffset(timeOffsetHours).format('h:mmA, D/M/YY');
                 temperature = data.current.temp;
                 wind = data.current.wind_speed;
                 humidity = data.current.humidity;
                 uv = data.current.uvi;
                 showTodaysWeather();
+                getWeatherForecast();
             });
         } else {
             alert('Error: ' + response.statusText);
@@ -122,17 +125,42 @@ function getTodaysWeather() {
 };
 
 function showTodaysWeather() {
-    selectedCityNameEl.text(selectedCity);
-    dateTodayEl.text(currentTimeSelectedCity);
-    temperatureTodayEl.text(temperature);
-    windTodayEl.text(wind);
-    humidityTodayEl.text(humidity);
-    uvTodayEl.text(uv);
+    selectedCityNameEl.textContent = selectedCity;
+    dateTodayEl.textContent = currentTimeSelectedCity;
+    temperatureTodayEl.textContent = temperature;
+    windTodayEl.textContent = wind;
+    humidityTodayEl.textContent = humidity;
+    uvTodayEl.textContent = uv;
 }
+
+
+console.log(dateEls);
+
 
 function getWeatherForecast() {
+        var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
 
-}
+        fetch(apiURL).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (data) {
+                    for (var i = 0; i < dateEls.length; i++) {
+                        var forecastOffset = parseInt([i]) + 1;
+                        console.log(forecastOffset);
+                    
+                        forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');
+                        console.log(forecastDate);
+                        
+                        dateEls[i].textContent = forecastDate;
+                    }                    
+                });
+            } else {
+               alert('Error: ' + response.statusText);
+           }
+        });
+   }
+
+
+
 
 // Show weather forecast for selected city
 function showWeatherForecast () {
