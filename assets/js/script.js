@@ -186,7 +186,12 @@ function showCityHistory(savedCities) {
 }
 
 // When clicked, set clicked city as selected city and show weather data
+function showWeatherForSavedCity(event) {
+    selectedCity = event.target.innerHTML;
+    getLatLon(selectedCity);
+}
 
+searchHistoryEl.addEventListener('click', showWeatherForSavedCity);
 
 // Autopopulate with data for Sydney when the page loads
 window.onload = function() {
