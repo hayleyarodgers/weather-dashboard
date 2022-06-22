@@ -7,7 +7,7 @@
 
 /* Custom font and size styling */
 body {
-    color: var(--black);
+    color: #474849;
     font-family: var(--font-main);
     font-weight: 400;
     font-size: 1.65rem;
@@ -38,6 +38,10 @@ h4 {
    font-size: 2rem; 
 }
 
+.card-header {
+    background-color: rgba(0, 0, 255, 0.141);
+}
+
 .card-header h4 {
     font-family: var(--font-heading);
     display: inline;
@@ -51,13 +55,7 @@ h4 {
     padding: 5%;
 }
 
-#search-button {
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: 2rem;
-}
-
-#clear-button, #search-history li {
+#search-history li {
     font-family: var(--font-heading);
     font-size: 1.65rem;
 }
@@ -69,7 +67,7 @@ h4 {
 
 /* Custom color styling */
 .jumbotron {
-    background-color: var(--blue);
+    background-color: #EB6E4C;
     color: var(--white);
 }
 
@@ -91,4 +89,20 @@ h4 {
 
 .purpleUV {
     background: var(--pink);
+}
+
+/* Custom button styling */
+#search-button, 
+#clear-button {
+    font-family: var(--font-heading);
+    background-color: #EB6E4C;
+    border-color: #EB6E4C;
+}
+
+#search-button {
+    font-size: 2rem;
+}
+
+#clear-button {
+    font-size: 1.65rem;
 }
