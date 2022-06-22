@@ -34,6 +34,8 @@ var humidityForecastEls = document.querySelectorAll('.humidity-forecast');
 
 var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
+var savedCities;
+
 /* ===INPUT=== */
 
 // When search button is clicked, set user's input as selected city
@@ -49,6 +51,7 @@ function selectCity(event) {
     }
 
     getLatLon(selectedCity);
+    saveCity(selectedCity);
 }
 
 // Get latitude and longitude of selected city
@@ -61,6 +64,7 @@ function getLatLon(selectedCity) {
             .then(function (data) {
                 selectedCityLatitude = data[0].lat;
                 selectedCityLongitude = data[0].lon;
+                selectedCityState
                 getTodaysWeatherData();
             });
         } else {
@@ -106,6 +110,8 @@ function showTodaysWeather(data) {
 
 // Set display of UV element based on value of UV index 
 function setUVColour(uvToday) {
+    uvTodayEl.classList = "btn btn-lg";
+
     if (uvToday <= 2) {
         uvTodayEl.classList.add('greenUV');
     } else if (2 < uvToday <= 5) {
@@ -150,11 +156,31 @@ function showWeatherForecast(data) {
 /* ===STORAGE=== */
 
 // Save city in local storage 
+function saveCity(selectedCity) {
+    savedCities = JSON.parse(localStorage.getItem("savedCities"));
 
+    if (savedCities === null) {
+        savedCities = [selectedCity];
+    } else {
+        savedCities.push(selectedCity);
+    }
+
+    localStorage.setItem("savedCities", JSON.stringify(savedCities));
+    showCityHistory(savedCities);
+}
 
 // Display city in search history 
-
-
+function showCityHistory(savedCities) {
+    searchHistoryEl.innerHTML = '';
+    
+    for (var i = 0; i < savedCities.length; i++) {
+        var city = savedCities[i];
+        var li = document.createElement("li");
+        li.classList = 'btn btn-light btn-lg btn-block';
+        li.textContent = city;
+        searchHistoryEl.appendChild(li);
+    }
+}
 
 // When clicked, set clicked city as selected city and show weather data
 
