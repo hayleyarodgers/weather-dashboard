@@ -17,14 +17,7 @@ var selectedCity;
 var selectedCityLatitude;
 var selectedCityLongitude;
 
-var currentTimeSelectedCity;
-var timeOffsetHours;
-
-var icon;
-var temperature;
-var wind;
-var humidity;
-var uv;
+var offsetHoursSelectedCity;
 
 var dateTodayEl = document.getElementById('date-today');
 var temperatureTodayEl = document.getElementById('temperature-today');
@@ -59,9 +52,8 @@ searchButtonEl.addEventListener('click', selectCity);
 function selectCity(event) {
     event.preventDefault();
 
-    selectedCity = cityInputEl.value;
+    selectedCity = cityInputEl.value.trim();
 
-    // change to pop-up
     if (!selectedCity) {
         alert('You need to select a city!');
         return;
@@ -73,7 +65,7 @@ function selectCity(event) {
 }
 
 // Get latitude and longitude of selected city
-function getLatLon() {
+function getLatLon(selectedCity) {
     var apiURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + selectedCity + '&limit=1&appid=' + apiKey;
 
     fetch(apiURL).then(function (response) {
@@ -82,10 +74,8 @@ function getLatLon() {
             .then(function (data) {
                 selectedCityLatitude = data[0].lat;
                 selectedCityLongitude = data[0].lon;
-                getTodaysWeather();
+                getTodaysWeatherData();
             });
-        
-        // change to error page
         } else {
             alert('Error: ' + response.statusText);
         }
@@ -94,20 +84,14 @@ function getLatLon() {
 
 /* ===DISPLAY=== */
 
-// Show today's weather for selected city
-function getTodaysWeather() {
+// Get data for today's weather in selected city
+function getTodaysWeatherData() {
     var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=minutely,hourly,daily,alerts&appid=' + apiKey +'&units=metric';
 
     fetch(apiURL).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-                timeOffsetHours = (data.timezone_offset)/3600;
-                currentTimeSelectedCity = moment().utcOffset(timeOffsetHours).format('h:mmA, D/M/YY');
-                temperature = data.current.temp;
-                wind = data.current.wind_speed;
-                humidity = data.current.humidity;
-                uv = data.current.uvi;
-                showTodaysWeather();
+                showTodaysWeather(data);
                 getWeatherForecastData();
             });
         } else {
@@ -116,34 +100,39 @@ function getTodaysWeather() {
     });
 };
 
-function showTodaysWeather() {
+// Show today's weather in selected city
+function showTodaysWeather(data) {
+    offsetHoursSelectedCity = (data.timezone_offset)/3600;
+    var currentTimeSelectedCity = moment().utcOffset(offsetHoursSelectedCity).format('h:mmA, D/M/YY');
+
     selectedCityNameEl.textContent = selectedCity;
     dateTodayEl.textContent = currentTimeSelectedCity;
-    temperatureTodayEl.textContent = temperature;
-    windTodayEl.textContent = wind;
-    humidityTodayEl.textContent = humidity;
-    uvTodayEl.textContent = uv;
+    temperatureTodayEl.textContent = data.current.temp;
+    windTodayEl.textContent = data.current.wind_speed;
+    humidityTodayEl.textContent = data.current.humidity;
+    uvTodayEl.textContent = data.current.uvi;
 }
 
-
+// Get data for weather forecast in selected city
 function getWeatherForecastData() {
-        var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
+    var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
 
-        fetch(apiURL).then(function (response) {
-            if (response.ok) {
-                response.json().then(function (data) {
-                    showWeatherForecast(data);
-                });
-            } else {
-               alert('Error: ' + response.statusText);
-           }
-        });
-   }
+    fetch(apiURL).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (data) {
+                showWeatherForecast(data);
+            });
+        } else {
+            alert('Error: ' + response.statusText);
+        }
+    });
+}
 
+// Show weather forecast in selected city
 function showWeatherForecast(data) {
     for (var i = 0; i < dateEls.length; i++) {
         var forecastOffset = parseInt([i]) + 1;    
-        var forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');
+        var forecastDate = moment().utcOffset(offsetHoursSelectedCity).add(forecastOffset, 'days').format('D/M/YY');
 
         dateEls[i].textContent = forecastDate;
         temperatureForecastEls[i].textContent = data.daily[i].temp.day;
@@ -153,7 +142,9 @@ function showWeatherForecast(data) {
 }
 
 // Set display of UV element based on value of UV index 
-
+function uvColour() {
+    
+}
 
 /* ===STORAGE=== */
 
@@ -165,3 +156,10 @@ function showWeatherForecast(data) {
 
 
 // When clicked, set clicked city as selected city and show weather data
+
+
+// Autopopulate with data for Sydney when the page loads
+window.onload = function() {
+    selectedCity = 'Sydney'
+    getLatLon('Sydney');
+}
