@@ -41,11 +41,27 @@ var date4El = document.getElementById('today+4');
 var date5El = document.getElementById('today+5');
 var dateEls = [date1El, date2El, date3El, date4El, date5El];
 
-var forecastDate;
 
-var temperatureForecastEls = document.querySelectorAll('.temperature');
-var windForecastEls = document.querySelectorAll('.wind');
-var humidityForecastEls = document.querySelectorAll('.humidity');
+var temperature1El = document.getElementById('temperature-1');
+var temperature2El = document.getElementById('temperature-2');
+var temperature3El = document.getElementById('temperature-3');
+var temperature4El = document.getElementById('temperature-4');
+var temperature5El = document.getElementById('temperature-5');
+var temperatureForecastEls = [temperature1El, temperature2El, temperature3El, temperature4El, temperature5El];
+
+var wind1El = document.getElementById('wind-1');
+var wind2El = document.getElementById('wind-2');
+var wind3El = document.getElementById('wind-3');
+var wind4El = document.getElementById('wind-4');
+var wind5El = document.getElementById('wind-5');
+var windForecastEls = [wind1El, wind2El, wind3El, wind4El, wind5El];
+
+var humidity1El = document.getElementById('humidity-1');
+var humidity2El = document.getElementById('humidity-2');
+var humidity3El = document.getElementById('humidity-3');
+var humidity4El = document.getElementById('humidity-4');
+var humidity5El = document.getElementById('humidity-5');
+var humidityForecastEls = [humidity1El, humidity2El, humidity3El, humidity4El, humidity5El];
 
 var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
@@ -133,9 +149,7 @@ function showTodaysWeather() {
     uvTodayEl.textContent = uv;
 }
 
-
-console.log(dateEls);
-
+console.log(temperatureForecastEls)
 
 function getWeatherForecast() {
         var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
@@ -143,15 +157,9 @@ function getWeatherForecast() {
         fetch(apiURL).then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    for (var i = 0; i < dateEls.length; i++) {
-                        var forecastOffset = parseInt([i]) + 1;
-                        console.log(forecastOffset);
-                    
-                        forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');
-                        console.log(forecastDate);
-                        
-                        dateEls[i].textContent = forecastDate;
-                    }                    
+                    showWeatherForecastDates();
+                    console.log(data);
+                    data.daily[i]
                 });
             } else {
                alert('Error: ' + response.statusText);
@@ -159,7 +167,13 @@ function getWeatherForecast() {
         });
    }
 
-
+function showWeatherForecastDates() {
+    for (var i = 0; i < dateEls.length; i++) {
+        var forecastOffset = parseInt([i]) + 1;    
+        var forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');        
+        dateEls[i].textContent = forecastDate;
+    }   
+}
 
 
 // Show weather forecast for selected city
