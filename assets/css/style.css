@@ -1,27 +1,11 @@
-/* CSS DIRECTORY
-    1. =GLOBAL
-    2. =HEADER
-    3. =SEARCH-BAR
-    4. =SEARCH-HISTORY
-    5. =WEATHER-TODAY
-    6. =WEATHER-FORECAST
-    7. =FOOTER
-*/
-
-/* ===GLOBAL=== */
-
-/* Set font and color scheme */
-
+/* Custom global styling */
 :root {
     font-size: 62.5%;
     --font-heading: 'Oswald', sans-serif;
     --font-main: 'Quattrocento', serif;
-    --black: #211F30;
-    --dark-grey: #32384D;
-    --blue: #217CA3;
-    --yellow: #F9BA32;
 }
 
+/* Custom font and size styling */
 body {
     color: var(--black);
     font-family: var(--font-main);
@@ -54,33 +38,8 @@ h4 {
    font-size: 2rem; 
 }
 
-.jumbotron {
-    background-color: #007bff;
-    color: white;
-}
-
-.card-header {
+.card-header h4 {
     font-family: var(--font-heading);
-}
-
-.greenUV {
-    background-color: rgb(49, 209, 49);
-}
-
-.yellowUV {
-    background-color: rgb(255, 251, 0);
-}
-
-.orangeUV {
-    background-color: rgb(255, 132, 0);
-}
-
-.redUV {
-    background-color: rgb(244, 30, 30);
-}
-
-.purpleUV {
-    background: rgb(231, 9, 231);
 }
 
 .form-control {
@@ -100,4 +59,30 @@ h4 {
 #clear-button, #search-history li {
     font-family: var(--font-heading);
     font-size: 1.65rem;
+}
+
+/* Custom color styling */
+.jumbotron {
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.greenUV {
+    background-color: var(--green);
+}
+
+.yellowUV {
+    background-color: var(--yellow);
+}
+
+.orangeUV {
+    background-color: var(--orange);
+}
+
+.redUV {
+    background-color: var(--red);
+}
+
+.purpleUV {
+    background: var(--pink);
 }
