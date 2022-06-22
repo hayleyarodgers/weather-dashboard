@@ -27,13 +27,13 @@ var temperatureTodayEl = document.getElementById('temperature-today');
 var windTodayEl = document.getElementById('wind-today');
 var humidityTodayEl = document.getElementById('humidity-today');
 var uvTodayEl = document.getElementById('UV-today');
-
-var iconEls = document.querySelectorAll('.icon');
+var iconTodayEl = document.getElementById('icon-today');
 
 var dateEls = document.querySelectorAll('.forecast-date');
 var temperatureForecastEls = document.querySelectorAll('.temperature-forecast');
 var windForecastEls = document.querySelectorAll('.wind-forecast');
 var humidityForecastEls = document.querySelectorAll('.humidity-forecast');
+var iconEls = document.querySelectorAll('.icon');
 
 var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
@@ -74,7 +74,7 @@ function getLatLon(selectedCity) {
             alert('Error: ' + response.statusText);
         }
     });
-};
+}
 
 /* ===DISPLAY=== */
 
@@ -92,28 +92,31 @@ function getTodaysWeatherData() {
             alert('Error: ' + response.statusText);
         }
     });
-};
+}
 
 // Show today's weather in selected city
-function showTodaysWeather(data) {
-    offsetHoursSelectedCity = (data.timezone_offset)/3600;
-    var currentTimeSelectedCity = moment().utcOffset(offsetHoursSelectedCity).format('h:mmA, D/M/YY');
-
+function showTodaysWeather(data) {    
     selectedCityNameEl.textContent = selectedCity;
     selectedCityCountryEl.textContent = selectedCityCountry;
+
+    offsetHoursSelectedCity = (data.timezone_offset)/3600;
+    var currentTimeSelectedCity = moment().utcOffset(offsetHoursSelectedCity).format('h:mmA, D/M/YY');
     dateTodayEl.textContent = currentTimeSelectedCity;
+
     temperatureTodayEl.textContent = data.current.temp;
     windTodayEl.textContent = data.current.wind_speed;
     humidityTodayEl.textContent = data.current.humidity;
     uvTodayEl.textContent = data.current.uvi;
-    cityInputEl.value = '';
 
-    var uvToday = data.current.uvi;
-    setUVColour(uvToday);
+    setUVColour(data);
+    setWeatherIconToday(data);
+
+    cityInputEl.value = '';
 }
 
 // Set display of UV element based on value of UV index 
-function setUVColour(uvToday) {
+function setUVColour(data) {
+    var uvToday = data.current.uvi;
     uvTodayEl.classList = "btn btn-lg";
 
     if (uvToday <= 2) {
@@ -127,6 +130,12 @@ function setUVColour(uvToday) {
     } else if (uvToday >= 5) {
         uvTodayEl.classList.add('purpleUV');
     }
+}
+
+function setWeatherIconToday(data) {
+    var weatherIconToday = data.current.weather[0].icon;
+    var iconSourceURL = 'https://openweathermap.org/img/wn/' + weatherIconToday + '@2x.png';
+    iconTodayEl.setAttribute('src', iconSourceURL);
 }
 
 // Get data for weather forecast in selected city
@@ -154,6 +163,10 @@ function showWeatherForecast(data) {
         temperatureForecastEls[i].textContent = data.daily[i].temp.day;
         windForecastEls[i].textContent = data.daily[i].humidity;
         humidityForecastEls[i].textContent = data.daily[i].wind_speed;
+
+        var weatherIconToday = data.daily[i].weather[0].icon;
+        var iconSourceURL = 'https://openweathermap.org/img/wn/' + weatherIconToday + '@2x.png';
+        iconEls[i].setAttribute('src', iconSourceURL);
     }   
 }
 
@@ -194,7 +207,7 @@ function showCityHistory() {
 searchHistoryEl.addEventListener('click', function(event) {
     selectedCity = event.target.innerHTML;
     getLatLon(selectedCity);
-});
+})
 
 // When clear button is clicked, clear search history
 clearButtonEl.addEventListener('click', function() {
