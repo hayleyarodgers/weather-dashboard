@@ -132,7 +132,7 @@ function getTodaysWeather() {
                 humidity = data.current.humidity;
                 uv = data.current.uvi;
                 showTodaysWeather();
-                getWeatherForecast();
+                getWeatherForecastData();
             });
         } else {
             alert('Error: ' + response.statusText);
@@ -149,17 +149,14 @@ function showTodaysWeather() {
     uvTodayEl.textContent = uv;
 }
 
-console.log(temperatureForecastEls)
 
-function getWeatherForecast() {
+function getWeatherForecastData() {
         var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
 
         fetch(apiURL).then(function (response) {
             if (response.ok) {
                 response.json().then(function (data) {
-                    showWeatherForecastDates();
-                    console.log(data);
-                    data.daily[i]
+                    showWeatherForecast(data);
                 });
             } else {
                alert('Error: ' + response.statusText);
@@ -167,18 +164,16 @@ function getWeatherForecast() {
         });
    }
 
-function showWeatherForecastDates() {
+function showWeatherForecast(data) {
     for (var i = 0; i < dateEls.length; i++) {
         var forecastOffset = parseInt([i]) + 1;    
-        var forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');        
+        var forecastDate = moment().utcOffset(timeOffsetHours).add(forecastOffset, 'days').format('D/M/YY');
+
         dateEls[i].textContent = forecastDate;
+        temperatureForecastEls[i].textContent = data.daily[i].temp.day;
+        windForecastEls[i].textContent = data.daily[i].humidity;
+        humidityForecastEls[i].textContent = data.daily[i].wind_speed;
     }   
-}
-
-
-// Show weather forecast for selected city
-function showWeatherForecast () {
-
 }
 
 // Set display of UV element based on value of UV index 
