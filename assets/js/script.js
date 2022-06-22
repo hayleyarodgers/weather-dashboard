@@ -11,6 +11,7 @@
 var cityInputEl = document.getElementById('city-input');
 var searchButtonEl = document.getElementById('search-button');
 var searchHistoryEl = document.getElementById('search-history');
+var clearButtonEl = document.getElementById('clear-button');
 
 var selectedCityNameEl = document.getElementById('selected-city-name');
 var selectedCityCountryEl = document.getElementById('selected-city-country');
@@ -177,13 +178,15 @@ function showCityHistory() {
     searchHistoryEl.innerHTML = '';
     
     savedCities = JSON.parse(localStorage.getItem("savedCities"));
-
-    for (var i = 0; i < savedCities.length; i++) {
-        var city = savedCities[i];
-        var li = document.createElement("li");
-        li.classList = 'btn btn-light btn-lg btn-block';
-        li.textContent = city;
-        searchHistoryEl.appendChild(li);
+    
+    if (savedCities !== null) {
+        for (var i = 0; i < savedCities.length; i++) {
+            var city = savedCities[i];
+            var li = document.createElement("li");
+            li.classList = 'btn btn-light btn-lg btn-block';
+            li.textContent = city;
+            searchHistoryEl.appendChild(li);
+        }
     }
 }
 
@@ -193,10 +196,16 @@ searchHistoryEl.addEventListener('click', function(event) {
     getLatLon(selectedCity);
 });
 
+// When clear button is clicked, clear search history
+clearButtonEl.addEventListener('click', function() {
+    searchHistoryEl.innerHTML = '';
+    localStorage.clear();
+})
+
 // Autopopulate with data for Sydney when the page loads
 window.onload = function() {
     selectedCity = 'Sydney'
-    selectedCityState = 'New South Wales'
+    selectedCityState = 'AU'
     getLatLon('Sydney');
 
     showCityHistory(savedCities);
