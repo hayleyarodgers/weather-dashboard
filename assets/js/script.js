@@ -64,7 +64,7 @@ searchButtonEl.addEventListener('click', selectCity);
 
 // Get latitude and longitude of selected city
 function getLatLon(selectedCity) {
-    var apiURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + selectedCity + '&limit=1&appid=' + apiKey;
+    var apiURL = 'https://api.openweathermap.org/geo/1.0/direct?q=' + selectedCity + '&limit=1&appid=' + apiKey;
 
     fetch(apiURL).then(function(response) {
         if (response.ok) {
