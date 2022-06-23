@@ -1,27 +1,31 @@
 /* JS DIRECTORY
     1. =VARIABLES
     2. =INPUT
-    3. =DISPLAY
-    4. =STORAGE
+    3. =DISPLAY-TODAY
+    4. =DISPLAY-FORECAST
+    5. =STORAGE
 */
 
 /* ===VARIABLES=== */
 
-// Section element variables
+// Search section element variables
 var cityInputEl = document.getElementById('city-input');
 var searchButtonEl = document.getElementById('search-button');
 var searchHistoryEl = document.getElementById('search-history');
 var clearButtonEl = document.getElementById('clear-button');
 
-var selectedCityNameEl = document.getElementById('selected-city-name');
-var selectedCityCountryEl = document.getElementById('selected-city-country');
+// Selected city variables
 var selectedCity;
 var selectedCityCountry;
 var selectedCityLatitude;
 var selectedCityLongitude;
+var selectedCityOffsetHours;
 
-var offsetHoursSelectedCity;
+// Selected city section element variables
+var selectedCityNameEl = document.getElementById('selected-city-name');
+var selectedCityCountryEl = document.getElementById('selected-city-country');
 
+// Today's forecast section elements
 var dateTodayEl = document.getElementById('date-today');
 var temperatureTodayEl = document.getElementById('temperature-today');
 var windTodayEl = document.getElementById('wind-today');
@@ -29,21 +33,20 @@ var humidityTodayEl = document.getElementById('humidity-today');
 var uvTodayEl = document.getElementById('UV-today');
 var iconTodayEl = document.getElementById('icon-today');
 
+// Weather forecast section elements
 var dateEls = document.querySelectorAll('.forecast-date');
 var temperatureForecastEls = document.querySelectorAll('.temperature-forecast');
 var windForecastEls = document.querySelectorAll('.wind-forecast');
 var humidityForecastEls = document.querySelectorAll('.humidity-forecast');
 var iconEls = document.querySelectorAll('.icon');
 
+// API access
 var apiKey = "88752a63ac29da05bb412d9600126dcf";
 
-var savedCities;
 
 /* ===INPUT=== */
 
 // When search button is clicked, set user's input as selected city
-searchButtonEl.addEventListener('click', selectCity);
-
 function selectCity(event) {
     event.preventDefault();
     selectedCity = cityInputEl.value;
@@ -57,14 +60,15 @@ function selectCity(event) {
     saveCity(selectedCity);
 }
 
+searchButtonEl.addEventListener('click', selectCity);
+
 // Get latitude and longitude of selected city
 function getLatLon(selectedCity) {
     var apiURL = 'http://api.openweathermap.org/geo/1.0/direct?q=' + selectedCity + '&limit=1&appid=' + apiKey;
 
-    fetch(apiURL).then(function (response) {
+    fetch(apiURL).then(function(response) {
         if (response.ok) {
-            response.json()
-            .then(function (data) {
+            response.json().then(function(data) {
                 selectedCityLatitude = data[0].lat;
                 selectedCityLongitude = data[0].lon;
                 selectedCityCountry = data[0].country;
@@ -76,15 +80,15 @@ function getLatLon(selectedCity) {
     });
 }
 
-/* ===DISPLAY=== */
+/* ===DISPLAY-TODAY=== */
 
 // Get data for today's weather in selected city
 function getTodaysWeatherData() {
     var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=minutely,hourly,daily,alerts&appid=' + apiKey +'&units=metric';
 
-    fetch(apiURL).then(function (response) {
+    fetch(apiURL).then(function(response) {
         if (response.ok) {
-            response.json().then(function (data) {
+            response.json().then(function(data) {
                 showTodaysWeather(data);
                 getWeatherForecastData();
             });
@@ -99,8 +103,8 @@ function showTodaysWeather(data) {
     selectedCityNameEl.textContent = selectedCity;
     selectedCityCountryEl.textContent = selectedCityCountry;
 
-    offsetHoursSelectedCity = (data.timezone_offset)/3600;
-    var currentTimeSelectedCity = moment().utcOffset(offsetHoursSelectedCity).format('h:mmA, D/M/YY');
+    selectedCityOffsetHours = (data.timezone_offset)/3600;
+    var currentTimeSelectedCity = moment().utcOffset(selectedCityOffsetHours).format('h:mmA, D/M/YY');
     dateTodayEl.textContent = currentTimeSelectedCity;
 
     temperatureTodayEl.textContent = data.current.temp;
@@ -132,19 +136,23 @@ function setUVColour(data) {
     }
 }
 
+// Set display of weather icon based on weather data 
 function setWeatherIconToday(data) {
     var weatherIconToday = data.current.weather[0].icon;
     var iconSourceURL = 'https://openweathermap.org/img/wn/' + weatherIconToday + '@2x.png';
     iconTodayEl.setAttribute('src', iconSourceURL);
 }
 
+
+/* ===DISPLAY-FORECAST=== */
+
 // Get data for weather forecast in selected city
 function getWeatherForecastData() {
     var apiURL = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + selectedCityLatitude + '&lon=' + selectedCityLongitude + '&exclude=current,minutely,hourly,alerts&appid=' + apiKey +'&units=metric';
 
-    fetch(apiURL).then(function (response) {
+    fetch(apiURL).then(function(response) {
         if (response.ok) {
-            response.json().then(function (data) {
+            response.json().then(function(data) {
                 showWeatherForecast(data);
             });
         } else {
@@ -157,7 +165,7 @@ function getWeatherForecastData() {
 function showWeatherForecast(data) {
     for (var i = 0; i < dateEls.length; i++) {
         var forecastOffset = parseInt([i]) + 1;    
-        var forecastDate = moment().utcOffset(offsetHoursSelectedCity).add(forecastOffset, 'days').format('D/M/YY');
+        var forecastDate = moment().utcOffset(selectedCityOffsetHours).add(forecastOffset, 'days').format('D/M/YY');
 
         dateEls[i].textContent = forecastDate;
         temperatureForecastEls[i].textContent = data.daily[i].temp.day;
@@ -174,7 +182,7 @@ function showWeatherForecast(data) {
 
 // Save city in local storage 
 function saveCity(selectedCity) {
-    savedCities = JSON.parse(localStorage.getItem("savedCities"));
+    var savedCities = JSON.parse(localStorage.getItem("savedCities"));
 
     if (savedCities === null) {
         savedCities = [selectedCity];
@@ -183,14 +191,14 @@ function saveCity(selectedCity) {
     }
 
     localStorage.setItem("savedCities", JSON.stringify(savedCities));
-    showCityHistory(savedCities);
+    showCityHistory();
 }
 
 // Display city in search history 
 function showCityHistory() {
     searchHistoryEl.innerHTML = '';
     
-    savedCities = JSON.parse(localStorage.getItem("savedCities"));
+    var savedCities = JSON.parse(localStorage.getItem("savedCities"));
     
     if (savedCities !== null) {
         for (var i = 0; i < savedCities.length; i++) {
@@ -215,11 +223,11 @@ clearButtonEl.addEventListener('click', function() {
     localStorage.clear();
 })
 
-// Autopopulate with data for Sydney when the page loads
+// When page loads, load search history and autopopulate with data for Sydney
 window.onload = function() {
     selectedCity = 'Sydney'
     selectedCityState = 'AU'
     getLatLon('Sydney');
 
-    showCityHistory(savedCities);
+    showCityHistory();
 }
